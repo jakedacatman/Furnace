@@ -1,7 +1,7 @@
---10
---Fortnite gamers!
+--11
+--E
  
-local version = 10
+local version = 11
  
 if not fs.exists("config.lua") then
     shell.run("wget https://raw.githubusercontent.com/jakedacatman/Furnace/master/config.lua config.lua")
@@ -21,9 +21,9 @@ if latest ~= nil then
             if event[1] == "char" then
                 if event[2] == "y" then
                     fs.delete(shell.getRunningProgram())
-                    shell.run("wget https://raw.githubusercontent.com/jakedacatman/Furnace/master/furnace.lua furnace.lua")
+                    shell.run("wget https://raw.githubusercontent.com/jakedacatman/Furnace/master/furnace.lua sniffer.lua")
                     print("Update complete!")
-                    print("If you wish to run the new version, then hold CTRL+T and run furnace.lua.")
+                    print("If you wish to run the new version, then hold CTRL+T and run sniffer.lua.")
                 else
                     print("Not updating.")
                     break
@@ -103,13 +103,17 @@ function removal()
         for i, v in pairs(furnaces) do
             local furnace = peripheral.wrap(v)
             local chestName = ""
-            for k, w in pairs(furnace.getTransferLocations()) do
-                if w:sub(11, 15) == "chest" then
-                    chestName = w
-                end
-            end
+			if config.outputChest ~= "" then
+				chestName = config.outputChest
+			else
+				for k, w in pairs(furnace.getTransferLocations()) do
+					if w:sub(11, 15) == "chest" then
+						chestName = w
+					end
+				end
+			end
             if furnace.getItemMeta(3) then -- slot 3 is output
-                furnace.pushItems(config.outputChest or chestname, 3) -- error here? connect a chest to the network
+                furnace.pushItems(chestName, 3) -- error here? connect a chest to the network
             end
         end
         sleep(3)
