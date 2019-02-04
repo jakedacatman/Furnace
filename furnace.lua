@@ -1,10 +1,10 @@
---7
---item removal?
+--8
+--Epic!
  
-local version = 7
+local version = 8
  
 if not fs.exists("config.lua") then
-    shell.run("wget https://raw.githubusercontent.com/jakedacatman/ChatLogger/master/config.lua config.lua")
+    shell.run("wget https://raw.githubusercontent.com/jakedacatman/Furnace/master/config.lua config.lua")
 end
  
 local latest = http.get("https://raw.githubusercontent.com/jakedacatman/Furnace/master/furnace.lua")
@@ -41,39 +41,60 @@ else
 end
  
 print("Running version "..version)
+
+local configFile = fs.open("config.lua", "r")
+local configSerialized = configFile.readAll()
+local config = textutils.unserialize(configSerialized)
+configFile.close()
  
-local chest = peripheral.find("minecraft:chest")
+local inputChest = {}
+if config.inputChest ~= "" then 
+    inputChest = peripheral.wrap(config.inputChest) -- if you error here then make sure the network name for your input in the config is correct
+else
+    inputChest = peripheral.find("minecraft:chest") -- if you error here then make sure you have a regular Minecraft chest on your network
+end
+
+local outputChest = {}
+if config.outputChest ~= "" then 
+    outputChest = peripheral.wrap(config.outputChest) -- if you error here then make sure the network name for your output in the config is correct
+else
+    outputChest = peripheral.find("minecraft:chest") -- if you error here then make sure you have a regular Minecraft chest on your network
+end
+
 local furnaces = {}
  
 local fuel = "minecraft:coal"
  
-for i,v in pairs(chest.getTransferLocations()) do
+for i,v in pairs(inputChest.getTransferLocations()) do
     if v:sub(11, 17) == "furnace" then
         table.insert(furnaces, v)
-        print("detected furnace "..v)
     end
 end
 
-function main()
- 
-end
+print("Currently connected furnaces: "..table.concat(furnaces, ", ")
+print("Input chest: "..config.inputChest or "using default")
+print("Output chest: "..config.outputChest or "using default")
+
+--function main()
+-- 
+--end
  
 function feeding()
     while true do
         for i = 1, 27 do
-            while chest.getItemMeta(i) ~= nil do
+            while inputChest.getItemMeta(i) ~= nil do
                 for k, v in pairs(furnaces) do
-                    if chest.getItemMeta(i) then
-                        if chest.getItemMeta(i).name == fuel then
-                            chest.pushItems(v..".west_side", i, 1)
+                    if inputChest.getItemMeta(i) then
+                        if inputChest.getItemMeta(i).name == fuel then
+                            inputChest.pushItems(v..".west_side", i, 1)
                         else
-                            chest.pushItems(v..".up_side", i, 1)
+                            inputChest.pushItems(v..".up_side", i, 1)
                         end
                     end
                 end
             end
         end
-        sleep(10)
+        sleep(3)
     end
 end
  
@@ -88,7 +109,7 @@ function removal()
                 end
             end
             if furnace.getItemMeta(3) then -- slot 3 is output
-                furnace.pushItems(chestName, 3)
+                furnace.pushItems(config.outputChest or chestname, 3) -- error here? connect a chest to the network
             end
         end
         sleep(3)
