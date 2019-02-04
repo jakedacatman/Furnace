@@ -1,7 +1,7 @@
---9
+--10
 --Fortnite gamers!
  
-local version = 9
+local version = 10
  
 if not fs.exists("config.lua") then
     shell.run("wget https://raw.githubusercontent.com/jakedacatman/Furnace/master/config.lua config.lua")
@@ -21,9 +21,9 @@ if latest ~= nil then
             if event[1] == "char" then
                 if event[2] == "y" then
                     fs.delete(shell.getRunningProgram())
-                    shell.run("wget https://raw.githubusercontent.com/jakedacatman/Furnace/master/furnace.lua sniffer.lua")
+                    shell.run("wget https://raw.githubusercontent.com/jakedacatman/Furnace/master/furnace.lua furnace.lua")
                     print("Update complete!")
-                    print("If you wish to run the new version, then hold CTRL+T and run sniffer.lua.")
+                    print("If you wish to run the new version, then hold CTRL+T and run furnace.lua.")
                 else
                     print("Not updating.")
                     break
