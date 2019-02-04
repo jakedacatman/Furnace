@@ -1,7 +1,7 @@
---8
---Epic!
+--9
+--Fortnite gamers!
  
-local version = 8
+local version = 9
  
 if not fs.exists("config.lua") then
     shell.run("wget https://raw.githubusercontent.com/jakedacatman/Furnace/master/config.lua config.lua")
@@ -48,7 +48,7 @@ local config = textutils.unserialize(configSerialized)
 configFile.close()
  
 local inputChest = {}
-if config.inputChest ~= "" then 
+if config.inputChest and config.inputChest ~= "" then 
     inputChest = peripheral.wrap(config.inputChest) -- if you error here then make sure the network name for your input in the config is correct
 else
     inputChest = peripheral.find("minecraft:chest") -- if you error here then make sure you have a regular Minecraft chest on your network
@@ -71,7 +71,7 @@ for i,v in pairs(inputChest.getTransferLocations()) do
     end
 end
 
-print("Currently connected furnaces: "..table.concat(furnaces, ", ")
+print("Currently connected furnaces: "..table.concat(furnaces, ", "))
 print("Input chest: "..config.inputChest or "using default")
 print("Output chest: "..config.outputChest or "using default")
 
