@@ -1,7 +1,7 @@
---12
---F
+--13
+--added fuel to config
  
-local version = 12
+local version = 13
  
 if not fs.exists("config.lua") then
     shell.run("wget https://raw.githubusercontent.com/jakedacatman/Furnace/master/config.lua config.lua")
@@ -63,7 +63,7 @@ end
 
 local furnaces = {}
  
-local fuel = "minecraft:coal"
+local fuel = type(config.fuel) == "string" and config.fuel or "minecraft:coal"
  
 for i,v in pairs(inputChest.getTransferLocations()) do
     if v:sub(11, 17) == "furnace" then
