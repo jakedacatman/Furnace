@@ -1,7 +1,7 @@
---13
---added fuel to config
+--14
+--dynamic slots
  
-local version = 13
+local version = 14
  
 if not fs.exists("config.lua") then
     shell.run("wget https://raw.githubusercontent.com/jakedacatman/Furnace/master/config.lua config.lua")
@@ -81,7 +81,8 @@ print("Output chest: "..config.outputChest or "using default")
  
 function feeding()
     while true do
-        for i = 1, 27 do
+	local size = inputChest.size()
+        for i = 1, size do
             while inputChest.getItemMeta(i) ~= nil do
                 for k, v in pairs(furnaces) do
                     if inputChest.getItemMeta(i) then
